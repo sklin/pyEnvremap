@@ -180,7 +180,7 @@ def process(src, dst, pat, rot, fil, to_img, to_env):
 
     for i in xrange(size(dst[0],0)):     # height of the image
         for j in xrange(size(dst[0],1)): # width of the image
-            print "Handling dst[0][%d][%d]" % (i, j)
+            #print "Handling dst[0][%d][%d]" % (i, j)
             for f in xrange(len(dst)):   # how many images in src
                 supersample(src, dst, pat, rot, fil, to_img, to_env, f, i, j)
     return True
@@ -215,16 +215,36 @@ def cube2sphere(src, size):
     process(src, dst, rgss_pattern, rot, filter_linear, cube_to_img, rect_to_env)
     return dst
 
-def main():
-    a = zeros((1024, 1024, 3))
-    src = []
-    src.append(a.copy())
-    src.append(a.copy())
-    src.append(a.copy())
-    src.append(a.copy())
-    src.append(a.copy())
-    src.append(a.copy())
-    cube2sphere(src, 64)
+from cv2 import imread
+import datetime
 
+def test_cube2sphere(size):
+    print "test_cube2sphere(%d)" % size
+    begin = datetime.datetime.now()
+    a0 = imread('output_0.tiff')
+    a1 = imread('output_1.tiff')
+    a2 = imread('output_2.tiff')
+    a3 = imread('output_3.tiff')
+    a4 = imread('output_4.tiff')
+    a5 = imread('output_5.tiff')
+    src = [a0, a1, a2, a3, a4, a5]
+    ret = cube2sphere(src, size)
+    end = datetime.datetime.now()
+    print (end - begin)
 
+def test_sphere2cube(size):
+    print "test_sphere2cube(%d)" % size
+    begin = datetime.datetime.now()
+    b0 = imread('image_001.tiff')
+    src = [b0]
+    ret = sphere2cube(src, size)
+    end = datetime.datetime.now()
+    print (end - begin)
+
+test_cube2sphere(64)
+test_sphere2cube(64)
+#test_cube2sphere(256)
+#test_sphere2cube(256)
+#test_cube2sphere(1024)
+#test_sphere2cube(1024)
 # size ? n ?
